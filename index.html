@@ -25,9 +25,11 @@
     <div class="wrapper">
         <!-- Sidebar  -->
         <nav id="sidebar">
-            <input type="text" class="form-control" data-bind="textInput: searchInput" style="width: 60%; margin-left:10px; float:left; margin-top: 10px"/>
-            <button type="button" name="button" class="btn" style="float:left; margin:10px" data-bind = "click: filter">Filter</button>
-            <h4>&nbsp&nbspAvailable Attractions:</h4>
+            <input type="text" class="form-control"
+             data-bind="textInput: searchInput, valueUpdate: 'afterkeydown'"
+             placeholder = "search attractions .."
+             style="width: 90%; margin: 25px 10px; float:left;"/>
+            <h4>&nbsp;&nbsp;Available Attractions:</h4>
             <hr />
             <ul class="list-unstyled components" data-bind="foreach: visibleAttractions">
                 <li list-group-item>
@@ -50,6 +52,7 @@
             </nav>
             <div id="map"></div>
 
+            <!-- initialize google map-->
             <script async defer
                  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtqa5Zn5ssezQLwS_Gwz1Unn5SpupZDK0&v=3&callback=initMap">
             </script>

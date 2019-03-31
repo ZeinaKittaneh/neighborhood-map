@@ -1,11 +1,4 @@
-var map;
-// Create a new blank array for all the listing markers.
-var markers = [];
-// to track marker that is currently bouncing
-var currentMarker = null;
-var lastInfoWindow;
-var locations;
-
+//array of montreal attractions
 var montrealAttractions = [
   {
     title:"Mount Royal",
@@ -59,50 +52,57 @@ var montrealAttractions = [
   }
 ];
 
+var map;
+// Create a new blank array for all the listing markers.
+var markers = [];
+// to track marker that is currently bouncing
+var currentMarker = null;
+var lastInfoWindow;
+
 function initMap() {
   var mapStyles = [];
   $.getJSON("js/map-style.json", function (data) {
-         // THE ARRAY TO STORE JSON ITEMS.
+    // THE ARRAY TO STORE JSON ITEMS.
     $.each(data, function (index, value) {
         mapStyles.push(value); // PUSH THE VALUES INSIDE THE ARRAY.
     });
   });
+
   map = new google.maps.Map(document.getElementById('map'),{
     center: {lat: 45.5017, lng: -73.5673},
     styles: mapStyles,
     zoom: 13
   });
-  console.log("array length : ", montrealAttractions.length);
-  montrealAttractions.forEach(function(attraction){
-      // Get the position from the location array.
-      console.log("add ", attraction.title);
-      var position = attraction.location;
-      var title = attraction.title;
-      // Create a marker per location, and put into markers array.
-       var marker = new google.maps.Marker({
-        position: position,
-        title: title,
-        animation: google.maps.Animation.DROP,
-        id: i,
-      });
-      // Push the marker to our array of markers.
-      markers.push(marker);
-      // Create an onclick event to open an infowindow at each marker and
-      //adding bouncing animation
-      marker.addListener('click', (function(thisMarker) {
-        return function(){
-          getInfoWikipedia(thisMarker);
-        };
-      })(marker));
 
-      //Loop through the markers array and display them all
-      var bounds = new google.maps.LatLngBounds();
-      // Extend the boundaries of the map for each marker and display the marker
-      for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(map);
-        bounds.extend(markers[i].position);
-      }
-      map.fitBounds(bounds);
+  montrealAttractions.forEach(function(attraction){
+    // Get the position from the location array.
+    var position = attraction.location;
+    var title = attraction.title;
+    // Create a marker per location, and put into markers array.
+     var marker = new google.maps.Marker({
+      position: position,
+      title: title,
+      animation: google.maps.Animation.DROP,
+      id: i,
+    });
+    // Push the marker to our array of markers.
+    markers.push(marker);
+    // Create an onclick event to get information from wikipedia api for
+    // each marker, then open information window and adding bouncing animation
+    marker.addListener('click', (function(thisMarker) {
+      return function(){
+        getInfoWikipedia(thisMarker);
+      };
+    })(marker));
+
+    //Loop through the markers array and display them all
+    var bounds = new google.maps.LatLngBounds();
+    // Extend the boundaries of the map for each marker and display the marker
+    for (var i = 0; i < markers.length; i++) {
+      markers[i].setMap(map);
+      bounds.extend(markers[i].position);
+    }
+    map.fitBounds(bounds);
   });
 }//end of initMAp
 
@@ -129,13 +129,12 @@ async function getInfoWikipedia(thisMarker){
     });
 }
 
-// This function populates the infowindow when the marker is clicked. We'll only allow
-// one infowindow which will open at the marker that is clicked, and populate based
-// on that markers position.
+// This function populates the infowindow when the marker is clicked.
+// We'll only allow one infowindow which will open at the marker that is clicked,
+// and populate based on that markers position.
 function populateInfoWindow(marker, infowindow, locationInfo) {
   if(lastInfoWindow)
     lastInfoWindow.close();
-  console.log("information = ", locationInfo);
   // Check to make sure the infowindow is not already opened on this marker.
   if (infowindow.marker != marker) {
     infowindow.marker = marker;
@@ -163,40 +162,32 @@ var ViewModel = function() {
     var self = this;
 
     var attractions;
-	  self.filter = ko.observable("");
     self.searchInput = ko.observable("");
-
-    if(self.searchInput == ""){
-      self.visibleAttractions = montrealAttractions;
-    }
-
-    this.visibleAttractions = ko.computed(function() {
+    self.visibleAttractions = ko.computed(function(){
+      //if empty search field:
+      if(self.searchInput() == ""){
+        console.log(montrealAttractions);
+        markers.forEach(function(marker) {marker.setVisible(true);});
+        return montrealAttractions;
+      }
+      else {
+        //while typing in search field, display only related markers
         var result = [];
         markers.forEach(function(marker) {
             if (marker.title.toLowerCase().includes(
-                self.search().toLowerCase())) {
+                self.searchInput().toLowerCase())) {
                 result.push(marker);
                 marker.setVisible(true);
             } else {
                 marker.setVisible(false);
             }
         });
-
         return result;
+      }
     }, this);
-	  // self.visibleAttractions = ko.computed( function() {
-  	// 	attractions = [];
-  // 		montrealAttractions.forEach(function(attraction) {
-  // 			if (attraction.title.toLowerCase().indexOf(self.filter().toLowerCase()) > -1) {
-  // 				attractions.push(attraction);
-  // 				attraction.marker.setMap(map);
-  // 			}else{
-  // 				attraction.marker.setMap(null);
-  // 			}
-	// 	});
-	// 	return attractions;
-	// });
 
+    //When click on any item in the list view, display its information window
+    // on the map
     this.displayInfo = function(parent) {
       if(lastInfoWindow)
         lastInfoWindow.close();
@@ -206,7 +197,6 @@ var ViewModel = function() {
       });
       console.log("display :", parent.title);
     };
-
 };
 
 ko.applyBindings(new ViewModel());
