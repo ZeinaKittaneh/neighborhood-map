@@ -83,7 +83,7 @@ a:focus {
     display: block;
 }
 
-#sidebar ul li a:hover {
+#sidebar ul li a:hover, a:focus {
     color: #7386D5;
     background: #fff;
 }

@@ -16,18 +16,22 @@
     <!-- Font Awesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <!-- knockout javascript  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js"></script>
+
 </head>
 
 <body>
     <div class="wrapper">
         <!-- Sidebar  -->
         <nav id="sidebar">
-            <input type="text" class="form-control" style="width: 60%; margin-left:10px; float:left; margin-top: 10px"/>
-            <button type="button" name="button" class="btn" style="float:left; margin:10px">Filter</button>
-            <ul class="list-unstyled components">
-                <p>Available Attractions:</p>
-                <li class="active">
-                    <a href="#homeSubmenu">Home</a>
+            <input type="text" class="form-control" data-bind="textInput: searchInput" style="width: 60%; margin-left:10px; float:left; margin-top: 10px"/>
+            <button type="button" name="button" class="btn" style="float:left; margin:10px" data-bind = "click: filter">Filter</button>
+            <h4>&nbsp&nbspAvailable Attractions:</h4>
+            <hr />
+            <ul class="list-unstyled components" data-bind="foreach: visibleAttractions">
+                <li list-group-item>
+                    <a href="#" data-bind="text: title, click: $parent.displayInfo"></a>
                 </li>
             </ul>
         </nav>
@@ -61,7 +65,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
     <!-- application javascript  -->
     <script src="js/app.js"></script>
-    <script src="js/montreal-special-places.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
