@@ -1,6 +1,6 @@
 # Neighborhood-map Udacity Full-Stack-NanoDegree Project
-This app is used to display special places in Montreal city using google maps api to display locations on a map and foursquare api
-to get some interseting information about each place.
+This app is used to display special places in Montreal city using google maps API to display locations on a map and mediaWiki API
+to fetch a description about each place.
 
 ## Running the app
 
@@ -13,4 +13,3 @@ or its name from the sidebar, you can also search for a place using the search f
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/arrickx/Item-Catalog-Application/blob/master/LICENSE) file for details.
-
