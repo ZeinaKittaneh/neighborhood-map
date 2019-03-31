@@ -157,6 +157,10 @@ function populateInfoWindow(marker, infowindow, locationInfo) {
   }
 }
 
+function loadingError() {
+    $('#map').html('There was an error while loading google map!');
+}
+
 var ViewModel = function() {
 
     var self = this;
